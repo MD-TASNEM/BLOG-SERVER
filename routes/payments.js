@@ -23,7 +23,8 @@ router.post("/create-checkout-session", verifyToken, async (req, res) => {
             currency: "usd", // Stripe uses USD; you can adjust
             product_data: {
               name: "Digital Life Lessons - Premium Plan",
-              description: "Lifetime Premium Access",
+              description: "Lifetime Premium Access - Unlock all features",
+              images: ["https://your-domain.com/premium-badge.png"],
             },
             unit_amount: 1500 * 100, // $15.00 (you can adjust for BDT equivalent)
           },
@@ -34,8 +35,13 @@ router.post("/create-checkout-session", verifyToken, async (req, res) => {
       success_url: `${process.env.CLIENT_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.CLIENT_URL}/payment/cancel`,
       customer_email: user.email,
+      billing_address_collection: "auto",
+      shipping_address_collection: {
+        allowed_countries: ["US", "CA", "GB", "BD"], // Add supported countries
+      },
       metadata: {
         userId: req.userId,
+        planType: "premium_lifetime",
       },
     });
 

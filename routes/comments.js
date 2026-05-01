@@ -21,11 +21,14 @@ router.post("/lesson/:id/comment", verifyToken, async (req, res) => {
     const user = await usersCollection.findOne({ _id: req.userId });
 
     const comment = {
+      _id: new require("mongodb").ObjectId().toString(),
       userId: req.userId,
       userName: user.name,
       userPhoto: user.photoURL,
       text,
       createdAt: new Date(),
+      updatedAt: new Date(),
+      isEdited: false,
     };
 
     const result = await lessonsCollection.updateOne(
@@ -36,7 +39,7 @@ router.post("/lesson/:id/comment", verifyToken, async (req, res) => {
       },
     );
 
-    res.status(201).json({ message: "Comment added" });
+    res.status(201).json({ message: "Comment added", comment });
   } catch (error) {
     console.error("Error adding comment:", error.message);
     res.status(500).json({ message: "Internal server error" });

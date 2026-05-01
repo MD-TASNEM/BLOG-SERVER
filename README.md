@@ -470,6 +470,5 @@ For support or questions, please contact:
 ---
 
 **Built with ❤️ for the Digital Life Lessons community**
-#   B L O G - C L I E N T 
  
  

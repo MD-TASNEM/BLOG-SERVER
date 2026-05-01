@@ -70,6 +70,7 @@ const reportsRoutes = require("./routes/reports");
 const paymentsRoutes = require("./routes/payments");
 const commentsRoutes = require("./routes/comments");
 const uploadRoutes = require("./routes/upload");
+const dashboardRoutes = require("./routes/dashboard");
 const adminRoutes = require("./routes/admin");
 
 app.use("/api/users", usersRoutes);
@@ -79,6 +80,7 @@ app.use("/api/reports", reportsRoutes);
 app.use("/api/payments", paymentsRoutes);
 app.use("/api/comments", commentsRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/admin", adminRoutes);
 
 // Basic route

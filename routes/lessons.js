@@ -377,44 +377,81 @@ router.get("/featured-lessons", async (req, res) => {
   }
 });
 
-// Get similar lessons based on category or emotional tone
+// Get similar lessons for recommendation
 router.get("/similar-lessons/:id", async (req, res) => {
   try {
     const db = getDB();
     const { id } = req.params;
     const lessonsCollection = db.collection("lessons");
 
-    const lesson = await lessonsCollection.findOne({ _id: id });
-    if (!lesson) {
+    // Get the current lesson
+    const currentLesson = await lessonsCollection.findOne({ _id: id });
+    if (!currentLesson) {
       return res.status(404).json({ message: "Lesson not found" });
     }
 
-    // Find similar lessons based on category or emotional tone
+    // Build filter for similar lessons
+    const filter = {
+      _id: { $ne: id }, // Exclude current lesson
+      visibility: "public", // Only public lessons
+    };
+
+    // Find lessons with same category or emotional tone
     const similarLessons = await lessonsCollection
       .find({
-        _id: { $ne: id },
-        visibility: "public",
-        $or: [
-          { category: lesson.category },
-          { emotionalTone: lesson.emotionalTone },
+        $and: [
+          filter,
+          {
+            $or: [
+              { category: currentLesson.category },
+              { emotionalTone: currentLesson.emotionalTone },
+            ],
+          },
         ],
       })
       .limit(6)
-      .sort({ createdAt: -1 })
+      .sort({ favoritesCount: -1, createdAt: -1 }) // Prioritize popular lessons
       .project({
+        _id: 1,
         title: 1,
-        creatorName: 1,
-        creatorPhoto: 1,
+        description: 1,
         category: 1,
         emotionalTone: 1,
-        accessLevel: 1,
-        likesCount: 1,
+        creatorName: 1,
+        creatorPhoto: 1,
         favoritesCount: 1,
+        likesCount: 1,
         views: 1,
         createdAt: 1,
-        image: 1,
       })
       .toArray();
+
+    // If we don't have enough similar lessons, get more public lessons
+    if (similarLessons.length < 6) {
+      const additionalLessons = await lessonsCollection
+        .find({
+          _id: { $nin: [id, ...similarLessons.map((l) => l._id)] },
+          visibility: "public",
+        })
+        .limit(6 - similarLessons.length)
+        .sort({ favoritesCount: -1, createdAt: -1 })
+        .project({
+          _id: 1,
+          title: 1,
+          description: 1,
+          category: 1,
+          emotionalTone: 1,
+          creatorName: 1,
+          creatorPhoto: 1,
+          favoritesCount: 1,
+          likesCount: 1,
+          views: 1,
+          createdAt: 1,
+        })
+        .toArray();
+
+      similarLessons.push(...additionalLessons);
+    }
 
     res.json(similarLessons);
   } catch (error) {

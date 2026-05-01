@@ -5,12 +5,21 @@ let db = null;
 const connectDB = async () => {
   if (db) return db;
 
-  const client = new MongoClient(process.env.MONGODB_URI);
+  const client = new MongoClient(process.env.MONGODB_URI, {
+    maxPoolSize: 10,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+  });
 
   try {
     await client.connect();
     db = client.db("digital_life_lessons");
     console.log("MongoDB connected successfully");
+
+    // Test the connection
+    await db.admin().ping();
+    console.log("MongoDB ping successful");
+
     return db;
   } catch (error) {
     console.error("MongoDB connection error:", error.message);

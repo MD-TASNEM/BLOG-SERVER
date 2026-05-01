@@ -1,57 +1,59 @@
 // Global error handling middleware
 
 const errorHandler = (err, req, res, next) => {
-  console.error('Error:', err);
+  console.error("Error:", err);
 
   // Default error
   let error = {
-    message: err.message || 'Internal Server Error',
-    status: err.status || 500
+    message: err.message || "Internal Server Error",
+    status: err.status || 500,
   };
 
   // Mongoose validation error
-  if (err.name === 'ValidationError') {
-    error.message = Object.values(err.errors).map(val => val.message).join(', ');
+  if (err.name === "ValidationError") {
+    error.message = Object.values(err.errors)
+      .map((val) => val.message)
+      .join(", ");
     error.status = 400;
   }
 
   // Mongoose duplicate key error
   if (err.code === 11000) {
-    error.message = 'Duplicate field value entered';
+    error.message = "Duplicate field value entered";
     error.status = 400;
   }
 
   // Mongoose cast error
-  if (err.name === 'CastError') {
-    error.message = 'Resource not found';
+  if (err.name === "CastError") {
+    error.message = "Resource not found";
     error.status = 404;
   }
 
   // JWT errors
-  if (err.name === 'JsonWebTokenError') {
-    error.message = 'Invalid token';
+  if (err.name === "JsonWebTokenError") {
+    error.message = "Invalid token";
     error.status = 401;
   }
 
-  if (err.name === 'TokenExpiredError') {
-    error.message = 'Token expired';
+  if (err.name === "TokenExpiredError") {
+    error.message = "Token expired";
     error.status = 401;
   }
 
   // Firebase auth errors
-  if (err.code && err.code.startsWith('auth/')) {
-    error.message = 'Authentication failed';
+  if (err.code && err.code.startsWith("auth/")) {
+    error.message = "Authentication failed";
     error.status = 401;
   }
 
   // Stripe errors
-  if (err.type && err.type.startsWith('Stripe')) {
-    error.message = 'Payment processing error';
+  if (err.type && err.type.startsWith("Stripe")) {
+    error.message = "Payment processing error";
     error.status = 400;
   }
 
   // Development vs Production
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     error.stack = err.stack;
   }
 
@@ -59,8 +61,8 @@ const errorHandler = (err, req, res, next) => {
     success: false,
     error: {
       message: error.message,
-      ...(process.env.NODE_ENV === 'development' && { stack: error.stack })
-    }
+      ...(process.env.NODE_ENV === "development" && { stack: error.stack }),
+    },
   });
 };
 
@@ -78,8 +80,17 @@ const notFound = (req, res, next) => {
   next(error);
 };
 
+// Request logger middleware
+const requestLogger = (req, res, next) => {
+  const timestamp = new Date().toISOString();
+  console.log(
+    `[${timestamp}] ${req.method} ${req.originalUrl} - IP: ${req.ip}`,
+  );
+  next();
+};
+
 module.exports = {
   errorHandler,
   asyncHandler,
-  notFound
+  notFound,
 };

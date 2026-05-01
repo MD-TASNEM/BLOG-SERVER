@@ -30,6 +30,7 @@ const initializeFirebase = () => {
                 picture: payload.picture || payload.photo_url || "",
               };
             } catch (e) {
+              console.log("Token parsing failed, using default mock user");
               return {
                 uid: "mock-user-id",
                 email: "test@example.com",
@@ -38,6 +39,8 @@ const initializeFirebase = () => {
               };
             }
           }
+          // If no valid token, still return a mock user for development
+          console.log("No valid token provided, using default mock user");
           return {
             uid: "mock-user-id",
             email: "test@example.com",

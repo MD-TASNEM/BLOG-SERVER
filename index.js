@@ -27,20 +27,20 @@ app.use(
   }),
 );
 
-// Rate limiting
+// Rate limiting - more lenient for development
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: process.env.NODE_ENV === "development" ? 1000 : 100, // Higher limit for development
   message: "Too many requests from this IP, please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
 });
 app.use("/api/", limiter);
 
-// Stricter rate limiting for auth endpoints
+// Stricter rate limiting for auth endpoints - more lenient in development
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 auth requests per windowMs
+  max: process.env.NODE_ENV === "development" ? 100 : 5, // Much higher limit for development
   message: "Too many authentication attempts, please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
@@ -73,7 +73,7 @@ const uploadRoutes = require("./routes/upload");
 const dashboardRoutes = require("./routes/dashboard");
 const adminRoutes = require("./routes/admin");
 
-app.use("/api/users", usersRoutes);
+app.use("/api/users", authLimiter, usersRoutes);
 app.use("/api/lessons", lessonsRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/reports", reportsRoutes);

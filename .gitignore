@@ -1,0 +1,36 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Environment variables (Crucial for dotenv)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Firebase & Credentials
+# Ensure you don't leak your Firebase Admin SDK JSON key or Stripe keys
+*.json
+!package.json
+!package-lock.json
+serviceAccountKey.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# Editor/OS Specific
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock

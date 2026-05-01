@@ -89,6 +89,7 @@ router.get("/public-lessons", async (req, res) => {
       sortBy = "createdAt",
       sortOrder = "desc",
       accessLevel,
+      featured,
     } = req.query;
 
     const lessonsCollection = db.collection("lessons");

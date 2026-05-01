@@ -1,22 +1,19 @@
-# Digital Life Lessons
+# Digital Life Lessons Server
 
-A comprehensive full-stack web application where users can create, store, and share meaningful life lessons, personal growth insights, and wisdom gathered over time.
+Backend server for Digital Life Lessons platform - A platform where users can create, store, and share meaningful life lessons, personal growth insights, and wisdom they have gathered over time.
 
-## � Project Status: **COMPLETE**
+## 🚀 Features
 
-This project has been successfully implemented with all required features and functionality. The application includes a fully functional React frontend with comprehensive user and admin interfaces.
-
-## �🌟 Features
-
-### Core Functionality
-
-- **User Authentication**: Email/password and Google OAuth with Firebase
-- **Lesson Management**: Create, edit, delete, and organize life lessons
-- **Privacy Controls**: Public/Private visibility with Free/Premium access levels
-- **Social Features**: Likes, comments, favorites, and sharing capabilities
-- **Premium Subscription**: One-time payment via Stripe for lifetime premium access
-- **Admin Dashboard**: Complete content moderation and user management
-- **Search & Filter**: Advanced filtering by category, emotional tone, and keywords
+- **Firebase Authentication**: Secure user authentication with email/password and Google login
+- **Lesson Management**: Complete CRUD operations for life lessons with categories and emotional tones
+- **Premium System**: Free and premium lesson access with Stripe payment integration
+- **Social Features**: Comments, likes, favorites, and sharing capabilities
+- **Content Moderation**: Reporting system with admin review and content management
+- **Admin Dashboard**: Comprehensive analytics and user/lesson management
+- **File Upload**: Secure image upload for lessons with validation
+- **Rate Limiting**: Advanced API protection with multiple rate limit tiers
+- **Search & Filtering**: Advanced search with category, tone, and keyword filtering
+- **Real-time Analytics**: User engagement tracking and platform statistics
 - **Responsive Design**: Mobile-first approach with modern UI/UX
 
 ### User Features
